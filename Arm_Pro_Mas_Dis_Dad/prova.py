@@ -252,10 +252,11 @@ resultados.to_excel(to_excel, index=False)
 to_json = 'nome_aluno.json'
 resultados.to_json(to_json, orient='records', lines=True)
 # %%
+# DESCOMENTE AS DUAS ÚLTIMAS LINHAS PARA ENVIAR PARA O BUCKET
 
 ssl._create_default_https_context = ssl._create_unverified_context
 amazon_s3 = AmazonS3()
 file1 = 'nome_aluno.json'
 file2 = 'nome_aluno.xlsx'
-amazon_s3.post_file_to_s3(file1)
-amazon_s3.post_file_to_s3(file2)
+#amazon_s3.post_file_to_s3(file1)
+#amazon_s3.post_file_to_s3(file2)
