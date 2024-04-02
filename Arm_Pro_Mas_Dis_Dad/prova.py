@@ -105,25 +105,25 @@ def get_file(sigla_uf):
 import numpy as np
 import pandas as pd
 
-def carregar_dados(arquivo):
+def carrega_dados(arquivo):
     df = pd.read_excel(arquivo, header=5)
     df = df.iloc[1:-1]
     return df
 
-def processar_colunas(df):
+def processa_colunas(df):
     colunas_homem = ['Unnamed: 0'] + [col for col in df.columns[2:34] if '.1' not in col and '.2' not in col]
     colunas_mulher = ['Unnamed: 0'] + [col for col in df.columns[35:] if '.2' in col]
     return colunas_homem, colunas_mulher
 
-def preparar_df(df, colunas, genero):
+def prepara_df(df, colunas, genero):
     df_preparado = df[colunas].copy()
     df_preparado.columns = [col.replace('.2', '') for col in colunas]
     df_preparado.rename(columns={'Unnamed: 0': 'municipio'}, inplace=True)
     df_preparado['genero'] = genero
-    df_preparado = converter_para_numerico(df_preparado)
+    df_preparado = converte_para_numerico(df_preparado)
     return df_preparado
 
-def converter_para_numerico(df):
+def converte_para_numerico(df):
     for col in df.columns[1:-1]:
         df[col] = pd.to_numeric(df[col].replace('-', 0), errors='coerce').fillna(0).astype(int)
     return df
@@ -189,10 +189,10 @@ idade_usuario = int(input("Digite sua idade: "))
 
 faixa_etaria_usuario = faixa_etaria(idade_usuario)
 
-df_original = carregar_dados(file)
-colunas_homem, colunas_mulher = processar_colunas(df_original)
-df_homem = preparar_df(df_original, colunas_homem, 'Homem')
-df_mulher = preparar_df(df_original, colunas_mulher, 'Mulher')
+df_original = carrega_dados(file)
+colunas_homem, colunas_mulher = processa_colunas(df_original)
+df_homem = prepara_df(df_original, colunas_homem, 'Homem')
+df_mulher = prepara_df(df_original, colunas_mulher, 'Mulher')
 df_homem_melted = melt_df(df_homem)
 df_mulher_melted = melt_df(df_mulher)
 df_final = pd.concat([df_homem_melted, df_mulher_melted], ignore_index=True)
