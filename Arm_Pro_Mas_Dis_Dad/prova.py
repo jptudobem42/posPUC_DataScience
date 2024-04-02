@@ -203,7 +203,7 @@ df_final
 #df_final.to_excel('df_final.xlsx', index=False)
 
 # %%
-## PERGUNTAS
+## PERGUNTAS DA PROVA
 
 # a) 
 faixa_etaria_mais_pessoas = df_final.groupby('faixa_etaria')['populacao'].sum().idxmax()
@@ -243,8 +243,11 @@ resultados = pd.DataFrame({
 })
 
 # %%
+# VISUALIZA OS RESULTADOS
+
 resultados
 # %%
+# GERA OS ARQUIVOS NO DIRETÓRIO LOCAL COM OS RESULTADOS
 
 to_excel = 'nome_aluno.xlsx'
 resultados.to_excel(to_excel, index=False)
