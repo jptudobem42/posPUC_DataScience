@@ -16,7 +16,7 @@ e) Faça um programa em pyhton que gere dois arquivos um em .xlsx e o outro .jso
 
 ex: nome_aluno.xlxs, nome_aluno.json
 
-## INTRUÇÕES DO CÓDIGO
+## INSTRUÇÕES DO CÓDIGO
 
 a) Substuir as keys referente à conexão com o bucket da Amazon S3;
 
