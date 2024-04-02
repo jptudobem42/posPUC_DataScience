@@ -246,16 +246,16 @@ resultados = pd.DataFrame({
 resultados
 # %%
 
-to_excel = 'prova.xlsx'
+to_excel = 'nome_aluno.xlsx'
 resultados.to_excel(to_excel, index=False)
 
-to_json = 'prova.json'
+to_json = 'nome_aluno.json'
 resultados.to_json(to_json, orient='records', lines=True)
 # %%
 
 ssl._create_default_https_context = ssl._create_unverified_context
 amazon_s3 = AmazonS3()
-file1 = 'prova.json'
-file2 = 'prova.xlsx'
+file1 = 'nome_aluno.json'
+file2 = 'nome_aluno.xlsx'
 amazon_s3.post_file_to_s3(file1)
 amazon_s3.post_file_to_s3(file2)
