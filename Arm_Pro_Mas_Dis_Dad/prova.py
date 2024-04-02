@@ -2,7 +2,6 @@
 # !pip install boto boto3
 
 # %%
-
 from boto.s3.connection import S3Connection
 import ssl
 
@@ -16,7 +15,6 @@ for key in bucket.list():
 # %%
 import boto3
 import os
-import requests
 
 class AmazonS3:
     bucket = None
@@ -71,7 +69,6 @@ class AmazonS3:
     
 
 # %%
- 
 import requests
 
 def get_file(sigla_uf):
@@ -206,7 +203,6 @@ df_final
 #df_final.to_excel('df_final.xlsx', index=False)
 
 # %%
-
 ## PERGUNTAS
 
 # a) 
