@@ -22,8 +22,11 @@ a) Substuir as keys referente à conexão com o bucket da Amazon S3;
 
 b) O script é interativo e fará 4 perguntas onde deverão ser respondidas respeitando as letras maiúsculas e acentução pois são case-sensitve:
     - Seu estado (UF)
+
     - Seu município
+
     - Gênero (Homem/Mulher)
-    - Idade
     
+    - Idade
+
 c) Altere o nome dos arquivos que serão gerados ao final do código
