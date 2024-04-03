@@ -1,5 +1,5 @@
 # %%
-# !pip install boto boto3
+!pip install boto boto3
 
 # %%
 from boto.s3.connection import S3Connection
@@ -67,8 +67,8 @@ class AmazonS3:
       amazon_url = self._put_object_bucket(file_path)
       return amazon_url
     
-
 # %%
+#!pip install requests
 import requests
 
 def get_file(sigla_uf):
@@ -88,7 +88,7 @@ def get_file(sigla_uf):
         print(f"A sigla {sigla_uf} não é válida.")
         return
 
-    url_base = "https://sidra.ibge.gov.br/geratabela?format=xlsx&name=tabela9514_UF_MUN_{uf}.xlsx&terr=N&rank=-&query=t/9514/n3/{uf}/n6/in%20n3%20{uf}/v/all/p/all/c2/all/c287/6653,49108,49109,60040,60041,93070,93084,93085,93086,93087,93088,93089,93090,93091,93092,93093,93094,93095,93096,93097,93098,100362/c286/113635/d/v1000093%202/l/v,p%2Bc2%2Bc287,t%2Bc286"
+    url_base = "https://sidra.ibge.gov.br/geratabela?format=xlsx&name=tabela9514_UF_MUN_{uf}.xlsx&terr=N&rank=-&query=t/9514/n3/{uf}/n6/in%20n3%20{uf}/v/all/p/all/c2/all/c287/6653,49108,49109,60040,60041,93070,93084,93085,93086,93087,93088,93089,93090,93091,93092,93093,93094,93095,93096,93097,93098,100362/c286/113635/d/v1000093%202/l/v,p%2Bc2%2Bc287,t%2Bc286" 
     url_completa = url_base.format(uf=codigo_uf)
 
     resposta = requests.get(url_completa)
@@ -196,7 +196,6 @@ df_mulher = prepara_df(df_original, colunas_mulher, 'Mulher')
 df_homem_melted = melt_df(df_homem)
 df_mulher_melted = melt_df(df_mulher)
 df_final = pd.concat([df_homem_melted, df_mulher_melted], ignore_index=True)
-
 
 #%%
 df_final
