@@ -32,4 +32,4 @@ b) O script é interativo e fará 4 perguntas onde deverão ser respondidas resp
 
 c) Altere o nome dos arquivos que serão gerados ao final do código.
 
-d) Os arquivos serão gerados no diretório onde o script estiver rodando e você pode verificar o conteúdo deles antes de enviar para o S3 (descomentar as duas últimas linhas para enviar).
+d) Os arquivos serão gerados no diretório onde o script estiver rodando.
