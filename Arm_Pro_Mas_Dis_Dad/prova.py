@@ -1,10 +1,11 @@
 # %%
-!pip install boto boto3
+!pip install boto3
 
 # %%
 import boto3
-import os
 import ssl
+import os
+
 
 #%%
 # DEFINIÇÃO DE VARIÁVEIS
@@ -17,15 +18,6 @@ amazon_path = 'prova/'
 #%%
 
 class AmazonS3:
-    bucket = None
-    bucket_name = None
-    amazon_path - None
-    aws_secret_access_key = None
-    aws_access_key_id = None
-    region_name = None
-    resource = None
-    file_name = None
-
     def __init__(self):
         ssl._create_default_https_context = ssl._create_unverified_context
         self.aws_access_key_id = AWS_ACCESS_KEY_ID
@@ -72,7 +64,6 @@ class AmazonS3:
                 print(f'Erro ao enviar o arquivo: {file_path}')
     
 # %%
-#!pip install requests
 import requests
 
 def get_file(sigla_uf):
