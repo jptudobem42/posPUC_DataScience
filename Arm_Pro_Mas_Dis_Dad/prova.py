@@ -69,7 +69,6 @@ class AmazonS3:
                 urls.append(url)
             else:
                 print(f'Erro ao enviar o arquivo: {file_path}')
-        return
     
 # %%
 #!pip install requests
