@@ -11,7 +11,7 @@ import os
 # DEFINIÇÃO DE VARIÁVEIS
 
 AWS_ACCESS_KEY_ID = ''
-AWS_SECRET_ACCES_KEY = '+uKjkYs4aQ'
+AWS_SECRET_ACCES_KEY = ''
 bucket_name = 'datalake-turma5.1'
 amazon_path = 'prova/'
 #%%
