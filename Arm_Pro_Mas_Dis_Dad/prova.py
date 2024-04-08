@@ -19,6 +19,7 @@ amazon_path = 'prova/'
 class AmazonS3:
     bucket = None
     bucket_name = None
+    amazon_path - None
     aws_secret_access_key = None
     aws_access_key_id = None
     region_name = None
