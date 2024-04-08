@@ -11,10 +11,9 @@ import os
 # DEFINIÇÃO DE VARIÁVEIS
 
 AWS_ACCESS_KEY_ID = ''
-AWS_SECRET_ACCES_KEY = ''
+AWS_SECRET_ACCES_KEY = '+uKjkYs4aQ'
 bucket_name = 'datalake-turma5.1'
 amazon_path = 'prova/'
-
 #%%
 
 class AmazonS3:
@@ -31,29 +30,29 @@ class AmazonS3:
     def connect_s3(self):
         try:
             session = boto3.Session(
-                aws_access_key_id=self.aws_access_key_id,
-                aws_secret_access_key=self.aws_secret_access_key,
-                region_name=self.region_name
+                aws_access_key_id = self.aws_access_key_id,
+                aws_secret_access_key = self.aws_secret_access_key,
+                region_name = self.region_name
             )
             s3 = session.resource(self.resource)
             self.bucket = s3.Bucket(self.bucket_name)
         except Exception as e:
-            print(e)
+            print(f"Erro ao conectar ao S3: {e}")
 
     def put_object_bucket(self, file_path):
+        if not self.bucket:
+            self.connect_s3()
         file_name = os.path.basename(file_path)
         amazon_destiny = self.amazon_path + file_name
         try:
             with open(file_path, 'rb') as data:
                 self.bucket.put_object(Key=amazon_destiny, Body=data)
-            url = f'https://{self.bucket_name}.s3.amazonaws.com/{amazon_destiny}'
-            return url
+            return f'https://{self.bucket_name}.s3.amazonaws.com/{amazon_destiny}'
         except Exception as e:
-            print(e)
+            print(f"Erro ao enviar o arquivo {file_path}: {e}")
             return None
 
     def post_files_to_s3(self, file_paths):
-        self.connect_s3()
         urls = []
         for file_path in file_paths:
             url = self.put_object_bucket(file_path)
@@ -62,7 +61,6 @@ class AmazonS3:
                 urls.append(url)
             else:
                 print(f'Erro ao enviar o arquivo: {file_path}')
-    
 # %%
 import requests
 
@@ -97,7 +95,6 @@ def get_file(sigla_uf):
         print(f"Erro ao baixar o arquivo. Código de status: {resposta.status_code}")
 
 # %%
-import numpy as np
 import pandas as pd
 
 def carrega_dados(arquivo):
