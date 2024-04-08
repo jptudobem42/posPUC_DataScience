@@ -6,7 +6,6 @@ import boto3
 import ssl
 import os
 
-
 #%%
 # DEFINIÇÃO DE VARIÁVEIS
 
@@ -14,6 +13,7 @@ AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCES_KEY = ''
 bucket_name = 'datalake-turma5.1'
 amazon_path = 'prova/'
+
 #%%
 
 class AmazonS3:
@@ -61,6 +61,7 @@ class AmazonS3:
                 urls.append(url)
             else:
                 print(f'Erro ao enviar o arquivo: {file_path}')
+                
 # %%
 import requests
 
