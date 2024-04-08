@@ -5,12 +5,14 @@
 from boto.s3.connection import S3Connection
 import ssl
 
-ssl._create_default_https_context = ssl._create_unverified_context
-conn = S3Connection('key_id', 'access_key')
-bucket = conn.get_bucket('datalake-turma5.1')
+def lista_arquivos():
+    ssl._create_default_https_context = ssl._create_unverified_context
+    conn = S3Connection(f'{AWS_ACCESS_KEY_ID}', f'{AWS_SECRET_ACCES_KEY}')
+    bucket = conn.get_bucket('datalake-turma5.1')
 
-for key in bucket.list():
-    print(key.name.encode('utf-8'))
+    for key in bucket.list():
+        print(key.name.encode('utf-8'))
+    return
 
 # %%
 import boto3
@@ -29,8 +31,8 @@ class AmazonS3:
         ssl._create_default_https_context = ssl._create_unverified_context
         self.bucket = ""
         self.bucket_name = 'datalake-turma5.1'
-        self.aws_access_key_id = 'key_id'
-        self.aws_secret_access_key = 'access_key'
+        self.aws_access_key_id = f'{AWS_ACCESS_KEY_ID}'
+        self.aws_secret_access_key = f'{AWS_SECRET_ACCES_KEY}'
         self.region_name = 'sa-east-1'
         self.resource = 's3'
         self.file_name = None
@@ -253,6 +255,16 @@ resultados.to_excel(to_excel, index=False)
 
 to_json = 'nome_aluno.json'
 resultados.to_json(to_json, orient='records', lines=True)
+
+#%%
+# DEFINA OS VALORES
+
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCES_KEY = ''
+#%%
+# LISTA OS ARQUIVOS NO BUCKET
+
+lista_arquivos()
 # %%
 # DESCOMENTE AS DUAS ÚLTIMAS LINHAS PARA ENVIAR PARA O BUCKET
 
