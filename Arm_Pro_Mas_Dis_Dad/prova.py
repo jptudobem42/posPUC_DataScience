@@ -15,7 +15,6 @@ bucket_name = 'datalake-turma5.1'
 amazon_path = 'prova/'
 
 #%%
-
 class AmazonS3:
     def __init__(self):
         ssl._create_default_https_context = ssl._create_unverified_context
@@ -61,7 +60,7 @@ class AmazonS3:
                 urls.append(url)
             else:
                 print(f'Erro ao enviar o arquivo: {file_path}')
-                
+
 # %%
 import requests
 
@@ -253,7 +252,6 @@ to_json = 'nome_aluno.json'
 resultados.to_json(to_json, orient='records', lines=True)
 
 # %%
-
 amazon_s3 = AmazonS3()
 arquivos = ['nome_aluno.json',  'nome_aluno.xlsx']
 amazon_s3.post_files_to_s3(arquivos)
