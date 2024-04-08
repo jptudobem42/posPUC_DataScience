@@ -2,29 +2,19 @@
 !pip install boto boto3
 
 # %%
-from boto.s3.connection import S3Connection
-import ssl
-
-def verifica_arquivos(file1, file2):
-    ssl._create_default_https_context = ssl._create_unverified_context
-    conn = S3Connection(f'{AWS_ACCESS_KEY_ID}', f'{AWS_SECRET_ACCES_KEY}')
-    bucket = conn.get_bucket('datalake-turma5.1')
-
-    arquivos = []
-
-    for key in bucket.list():
-        if key.name == file1 or key.name == file2:
-            arquivos.append(key.name)
-            print(f"Arquivo encontrado: {key.name.encode('utf-8')}")
-
-    if file1 not in arquivos:
-        print(f"Arquivo não encontrado: {file1}")
-    if file2 not in arquivos:
-        print(f"Arquivo não encontrado: {file2}")
-
-# %%
 import boto3
 import os
+import ssl
+
+#%%
+# DEFINIÇÃO DE VARIÁVEIS
+
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCES_KEY = ''
+bucket_name = 'datalake-turma5.1'
+amazon_path = 'prova/'
+
+#%%
 
 class AmazonS3:
     bucket = None
@@ -37,45 +27,49 @@ class AmazonS3:
 
     def __init__(self):
         ssl._create_default_https_context = ssl._create_unverified_context
-        self.bucket = ""
-        self.bucket_name = 'datalake-turma5.1'
-        self.aws_access_key_id = f'{AWS_ACCESS_KEY_ID}'
-        self.aws_secret_access_key = f'{AWS_SECRET_ACCES_KEY}'
+        self.aws_access_key_id = AWS_ACCESS_KEY_ID
+        self.aws_secret_access_key = AWS_SECRET_ACCES_KEY
+        self.bucket = None
+        self.bucket_name = bucket_name
+        self.amazon_path = amazon_path
         self.region_name = 'sa-east-1'
         self.resource = 's3'
-        self.file_name = None
 
-    def _connect_s3(self):
-      try:
-          session = boto3.Session(
-              aws_access_key_id=self.aws_access_key_id,
-              aws_secret_access_key=self.aws_secret_access_key,
-              region_name=self.region_name
-          )
-          s3 = session.resource(self.resource)
-          self.bucket = s3.Bucket(self.bucket_name)
-      except Exception as e:
-          print(e)
+    def connect_s3(self):
+        try:
+            session = boto3.Session(
+                aws_access_key_id=self.aws_access_key_id,
+                aws_secret_access_key=self.aws_secret_access_key,
+                region_name=self.region_name
+            )
+            s3 = session.resource(self.resource)
+            self.bucket = s3.Bucket(self.bucket_name)
+        except Exception as e:
+            print(e)
 
-    def _put_object_bucket(self, file_path, amazon_path='prova/'):
-      self.file_name = os.path.basename(file_path)
-      amazon_destiny = amazon_path + self.file_name
-      try:
-          with open(file_path, 'rb') as data:
-              self.bucket.put_object(Key=amazon_destiny, Body=data)
-      except Exception as e:
-          print(e)
-          return None
+    def put_object_bucket(self, file_path):
+        file_name = os.path.basename(file_path)
+        amazon_destiny = self.amazon_path + file_name
+        try:
+            with open(file_path, 'rb') as data:
+                self.bucket.put_object(Key=amazon_destiny, Body=data)
+            url = f'https://{self.bucket_name}.s3.amazonaws.com/{amazon_destiny}'
+            return url
+        except Exception as e:
+            print(e)
+            return None
 
-      os.remove(file_path)
-      url = f'https://{self.bucket_name}.s3.amazonaws.com/{amazon_destiny}'
-      print(url)
-      return url
-
-    def post_file_to_s3(self, file_path):
-      self._connect_s3()
-      amazon_url = self._put_object_bucket(file_path)
-      return amazon_url
+    def post_files_to_s3(self, file_paths):
+        self.connect_s3()
+        urls = []
+        for file_path in file_paths:
+            url = self.put_object_bucket(file_path)
+            if url:
+                print(f'Arquivo enviado com sucesso: {url}')
+                urls.append(url)
+            else:
+                print(f'Erro ao enviar o arquivo: {file_path}')
+        return urls
     
 # %%
 #!pip install requests
@@ -190,14 +184,8 @@ def faixa_etaria(idade):
 
 #%%
 UF = input("Digite a sigla do seu estado (UF): ")
-get_file(f"{UF}")
+get_file(UF)
 file = f'tabela9514_UF_MUN_{UF}.xlsx'
-
-municipio_usuario = str(input("Digite seu município (case sensitive): "))
-genero_usuario = input("Digite seu gênero (Homem/Mulher): ")
-idade_usuario = int(input("Digite sua idade: "))
-
-faixa_etaria_usuario = faixa_etaria(idade_usuario)
 
 df_original = carrega_dados(file)
 colunas_homem, colunas_mulher = processa_colunas(df_original)
@@ -208,11 +196,21 @@ df_mulher_melted = melt_df(df_mulher)
 df_final = pd.concat([df_homem_melted, df_mulher_melted], ignore_index=True)
 
 #%%
+# VISUALIZA O DF FINAL COM O ARQUIVO TRATADO ANTES DE RESPONDER AS PERGUNTAS
+
 df_final
+
+# DESCOMENTE A LINHA ABAIXO CASO QUEIRA GERAR UM XLSX DO ARQUIVO TRATADO
 #df_final.to_excel('df_final.xlsx', index=False)
 
 # %%
 ## PERGUNTAS DA PROVA
+
+municipio_usuario = str(input("Digite seu município (case sensitive): "))
+genero_usuario = input("Digite seu gênero (Homem/Mulher): ")
+idade_usuario = int(input("Digite sua idade: "))
+
+faixa_etaria_usuario = faixa_etaria(idade_usuario)
 
 # a) 
 faixa_etaria_mais_pessoas = df_final.groupby('faixa_etaria')['populacao'].sum().idxmax()
@@ -252,11 +250,12 @@ resultados = pd.DataFrame({
 })
 
 # %%
-# VISUALIZA OS RESULTADOS
+# VISUALIZA OS RESULTADOS ANTES DE GERAR OS ARQUIVOS
 
 resultados
 # %%
 # GERA OS ARQUIVOS NO DIRETÓRIO LOCAL COM OS RESULTADOS
+# ALTERE O NOME DOS ARQUIVOS PARA O SEU NOME
 
 to_excel = 'nome_aluno.xlsx'
 resultados.to_excel(to_excel, index=False)
@@ -264,22 +263,8 @@ resultados.to_excel(to_excel, index=False)
 to_json = 'nome_aluno.json'
 resultados.to_json(to_json, orient='records', lines=True)
 
-#%%
-# DEFINA OS VALORES
-
-AWS_ACCESS_KEY_ID = ''
-AWS_SECRET_ACCES_KEY = ''
-
 # %%
-# DESCOMENTE AS DUAS ÚLTIMAS LINHAS PARA ENVIAR PARA O BUCKET
 
 amazon_s3 = AmazonS3()
-file1 = 'nome_aluno.json'
-file2 = 'nome_aluno.xlsx'
-#amazon_s3.post_file_to_s3(file1)
-#amazon_s3.post_file_to_s3(file2)
-
-#%%
-# VERIFICA SE OS ARQUIVOS FORAM ENVIADOS PARA O BUCKET
-
-verifica_arquivos(file1,file2)
+arquivos = ['nome_aluno.json',  'nome_aluno.xlsx']
+urls = amazon_s3.post_files_to_s3(arquivos)
