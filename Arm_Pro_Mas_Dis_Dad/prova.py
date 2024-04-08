@@ -267,4 +267,4 @@ resultados.to_json(to_json, orient='records', lines=True)
 
 amazon_s3 = AmazonS3()
 arquivos = ['nome_aluno.json',  'nome_aluno.xlsx']
-urls = amazon_s3.post_files_to_s3(arquivos)
+amazon_s3.post_files_to_s3(arquivos)
