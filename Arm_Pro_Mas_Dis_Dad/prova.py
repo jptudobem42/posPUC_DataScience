@@ -5,14 +5,22 @@
 from boto.s3.connection import S3Connection
 import ssl
 
-def lista_arquivos():
+def verifica_arquivos(file1, file2):
     ssl._create_default_https_context = ssl._create_unverified_context
     conn = S3Connection(f'{AWS_ACCESS_KEY_ID}', f'{AWS_SECRET_ACCES_KEY}')
     bucket = conn.get_bucket('datalake-turma5.1')
 
+    arquivos = []
+
     for key in bucket.list():
-        print(key.name.encode('utf-8'))
-    return
+        if key.name == file1 or key.name == file2:
+            arquivos.append(key.name)
+            print(f"Arquivo encontrado: {key.name.encode('utf-8')}")
+
+    if file1 not in arquivos:
+        print(f"Arquivo não encontrado: {file1}")
+    if file2 not in arquivos:
+        print(f"Arquivo não encontrado: {file2}")
 
 # %%
 import boto3
@@ -261,16 +269,17 @@ resultados.to_json(to_json, orient='records', lines=True)
 
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCES_KEY = ''
-#%%
-# LISTA OS ARQUIVOS NO BUCKET
 
-lista_arquivos()
 # %%
 # DESCOMENTE AS DUAS ÚLTIMAS LINHAS PARA ENVIAR PARA O BUCKET
 
-ssl._create_default_https_context = ssl._create_unverified_context
 amazon_s3 = AmazonS3()
 file1 = 'nome_aluno.json'
 file2 = 'nome_aluno.xlsx'
 #amazon_s3.post_file_to_s3(file1)
 #amazon_s3.post_file_to_s3(file2)
+
+#%%
+# VERIFICA SE OS ARQUIVOS FORAM ENVIADOS PARA O BUCKET
+
+verifica_arquivos(file1,file2)
